@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="自动追踪 arXiv 上的 Agent Memory 与大模型长期记忆研究。无需登录，直接浏览最新论文。">
+  <meta property="og:title" content="Agent Memory 论文雷达">
+  <meta property="og:description" content="自动追踪 Agent Memory、长期记忆、记忆安全与评测研究。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://snooze26h.github.io/paper-feed/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Agent Memory 论文雷达">
+  <meta name="twitter:description" content="自动追踪 Agent Memory、长期记忆、记忆安全与评测研究。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <title>Agent Memory 论文雷达</title>
+  <link rel="alternate" type="application/rss+xml" title="Agent Memory RSS" href="./filtered_feed.xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#paper-list">跳到论文列表</a>
+
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Agent Memory 论文雷达首页">
+        <span class="brand-mark" aria-hidden="true">AM</span>
+        <span>Agent Memory <strong>Papers</strong></span>
+      </a>
+      <nav class="header-links" aria-label="辅助链接">
+        <a href="./filtered_feed.xml">RSS 源</a>
+        <a href="https://github.com/snooze26h/paper-feed" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">ARXIV RESEARCH MONITOR</p>
+          <h1 id="page-title">Agent Memory<br><span>论文雷达</span></h1>
+          <p class="hero-description">
+            自动追踪长期记忆、检索与更新、记忆评测、安全与投毒、个性化以及多智能体共享记忆研究。
+          </p>
+          <p class="update-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="update-label">正在读取最新论文…</span>
+          </p>
+        </div>
+
+        <dl class="stats" aria-label="论文统计">
+          <div class="stat">
+            <dt>今天</dt>
+            <dd id="today-count">—</dd>
+          </div>
+          <div class="stat">
+            <dt>近 7 天</dt>
+            <dd id="week-count">—</dd>
+          </div>
+          <div class="stat">
+            <dt>全部论文</dt>
+            <dd id="total-count">—</dd>
+          </div>
+          <div class="stat">
+            <dt>arXiv 分类</dt>
+            <dd id="source-count">—</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="reader" aria-labelledby="reader-title">
+        <div class="reader-heading">
+          <div>
+            <p class="section-label">PAPER INDEX</p>
+            <h2 id="reader-title">最新研究</h2>
+          </div>
+          <p id="result-summary" class="result-summary" role="status" aria-live="polite">载入中</p>
+        </div>
+
+        <div class="controls" aria-label="论文筛选工具">
+          <div class="search-field">
+            <label for="paper-search">搜索标题或摘要</label>
+            <input id="paper-search" type="search" placeholder="例如：benchmark、poisoning、retrieval" autocomplete="off">
+          </div>
+
+          <fieldset class="range-filter">
+            <legend>时间范围</legend>
+            <div class="segmented-control">
+              <button type="button" data-range="today" aria-pressed="false">今天</button>
+              <button type="button" data-range="7d" aria-pressed="true">近 7 天</button>
+              <button type="button" data-range="all" aria-pressed="false">全部</button>
+            </div>
+          </fieldset>
+
+          <div class="select-field">
+            <label for="source-filter">arXiv 分类</label>
+            <select id="source-filter">
+              <option value="all">全部分类</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="load-state" class="load-state" role="status" aria-live="polite">
+          <span class="loading-line" aria-hidden="true"></span>
+          <p id="load-message">正在从 RSS 读取最新论文…</p>
+          <button id="retry-button" class="secondary-button" type="button" hidden>重新加载</button>
+        </div>
+
+        <div id="paper-list" class="paper-list" aria-label="论文列表"></div>
+
+        <div class="list-actions">
+          <button id="load-more" class="secondary-button" type="button" hidden>加载更多</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>数据来自 arXiv RSS，每约 6 小时自动更新。页面不使用 AI API，也不会收集访问者信息。</p>
+      <p><a href="./filtered_feed.xml">订阅 RSS</a> · <a href="https://github.com/snooze26h/paper-feed" target="_blank" rel="noopener noreferrer">查看项目</a></p>
+    </footer>
+  </div>
+
+  <template id="paper-card-template">
+    <article class="paper-card">
+      <div class="paper-index" aria-hidden="true"></div>
+      <div class="paper-content">
+        <div class="paper-meta">
+          <time></time>
+          <span class="source-pill"></span>
+        </div>
+        <h3><a class="paper-title" target="_blank" rel="noopener noreferrer"></a></h3>
+        <p class="paper-abstract"></p>
+        <div class="paper-actions">
+          <button class="abstract-toggle" type="button" aria-expanded="false">展开摘要</button>
+          <a class="paper-link" target="_blank" rel="noopener noreferrer">前往 arXiv <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </article>
+  </template>
+</body>
+</html>

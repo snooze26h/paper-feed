@@ -3,21 +3,25 @@
 [![GitHub Actions](https://img.shields.io/badge/Actions-Automated-blue.svg)](https://github.com/features/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+**在线浏览**：[Agent Memory 论文雷达](https://snooze26h.github.io/paper-feed/)
+
 ### 系统概述
 本工具是一个基于 GitHub Actions 的全自动文献监测系统。它旨在解决科研工作中的信息筛选效率问题，功能逻辑如下：
 1.  **抓取**：定时从指定的期刊 RSS 源获取最新发表的论文。
 2.  **筛选**：根据预设的关键词逻辑（支持 `AND` 组合）对标题和摘要进行匹配。
-3.  **AI总结**：借助AI减轻手动翻阅订阅的负担，现在只需打开汇总网页扫一眼。
-4.  **分发**：将命中的论文重组为标准化的 RSS 订阅源，供 Zotero 等阅读器订阅，如果你是Zotero用户，可能会对[插件版](https://github.com/Jarvis-Towne/paper-feed-zotero)感兴趣。
+3.  **网页浏览**：无需安装 RSS 阅读器，直接在响应式网页中按日期、分类和关键词浏览论文。
+4.  **AI总结（可选）**：借助 AI 对新增论文进行二次筛选并生成中文摘要。
+5.  **分发**：将命中的论文重组为标准化的 RSS 订阅源，供 Zotero 等阅读器订阅，如果你是Zotero用户，可能会对[插件版](https://github.com/Jarvis-Towne/paper-feed-zotero)感兴趣。
 
 ---
 
 ## 🛠 功能特性
 
-*   **全自动运行**：无需服务器，利用 GitHub Actions 每 8 小时自动执行一次检索。
+*   **全自动运行**：无需服务器，利用 GitHub Actions 每 6 小时自动执行一次检索。
 *   **多维度检索**：支持简单的关键词匹配及 `Keyword A AND Keyword B` 的组合逻辑检索。
 *   **数据清洗**：内置 XML 字符清洗程序，自动移除非法字符，确保订阅源的兼容性与稳定性。
 *   **隐私保护**：支持通过 GitHub Secrets 注入配置，隐藏用户的研究领域与关注列表。
+*   **浏览器阅读**：自动读取 RSS，支持今日、近 7 天、全部、分类筛选和标题/摘要搜索，不需要 API Key。
 *   **AI 总结（可选）**：支持调用 OpenAI 兼容接口，对新增命中文献生成中文 HTML 总结，并输出独立 RSS。
 
 ---
@@ -109,6 +113,14 @@ AI 总结会生成：
     *   选中左侧 **Auto RSS Fetch** -> **Run workflow** 手动触发首次运行。
 
 ---
+
+## 🌐 浏览器直接阅读
+
+GitHub Pages 启用后，直接访问：
+
+`https://{你的GitHub用户名}.github.io/{仓库名}/`
+
+页面会读取同目录下的 `filtered_feed.xml`，无需登录、无需安装软件，也不需要 AI API Key。
 
 ## 📈 客户端接入 (以 Zotero 为例)
 
